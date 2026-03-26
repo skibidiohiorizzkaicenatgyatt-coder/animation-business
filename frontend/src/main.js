@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHamburger();
   initModal();
   initNavScroll();
+  initContact();
 });
 
 /* ── Stars ── */
@@ -105,4 +106,50 @@ function initNavScroll() {
       nav.style.backdropFilter = '';
     }
   }, { passive: true });
+}
+
+/* ── Contact form ── */
+function initContact() {
+  const btn      = document.getElementById('contact-submit-btn');
+  const feedback = document.getElementById('contact-feedback');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    const nome     = document.getElementById('c-nome').value.trim();
+    const email    = document.getElementById('c-email').value.trim();
+    const mensagem = document.getElementById('c-mensagem').value.trim();
+
+    if (!nome || !email || !mensagem) {
+      feedback.textContent = 'Preencha todos os campos antes de enviar.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    feedback.textContent = '';
+
+    try {
+      const res = await fetch('http://localhost:5000/api/contato', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, email, mensagem }),
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        feedback.textContent = '✦ Mensagem enviada! Retornamos em breve.';
+        document.getElementById('c-nome').value = '';
+        document.getElementById('c-email').value = '';
+        document.getElementById('c-mensagem').value = '';
+      } else {
+        feedback.textContent = 'Algo deu errado. Tente novamente.';
+      }
+    } catch (err) {
+      feedback.textContent = 'Não foi possível conectar ao servidor.';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Enviar mensagem ✦';
+  });
 }
