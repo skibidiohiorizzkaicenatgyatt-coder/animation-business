@@ -5,7 +5,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   initStars();
   initHamburger();
-  initModal();
   initNavScroll();
   initContact();
 });
@@ -59,36 +58,6 @@ function initHamburger() {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeMenu();
-  });
-}
-
-/* ── Modal ── */
-function initModal() {
-  const overlay   = document.getElementById('modal');
-  const submitBtn = document.getElementById('submit-btn');
-  const closeBtn  = document.getElementById('modal-close');
-
-  if (!overlay) return;
-
-  window.showModal = function () {
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  };
-
-  window.closeModal = function () {
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-  };
-
-  if (submitBtn) submitBtn.addEventListener('click', window.showModal);
-  if (closeBtn)  closeBtn.addEventListener('click', window.closeModal);
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) window.closeModal();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') window.closeModal();
   });
 }
 
